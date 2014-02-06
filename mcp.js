@@ -91,7 +91,7 @@ mcp.loader = function( files, callback){
 		files_to_load[index].setAttribute(file_type.src, item.file);
 	
 		// inject to the head
-		document.getElementsByTagName("head")[0].mcpendChild(files_to_load[index]);
+		document.getElementsByTagName("head")[0].appendChild(files_to_load[index]);
 
   
 	});
