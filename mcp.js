@@ -132,7 +132,10 @@ mcp.file_type = function(type) {
 mcp.script_queue = [];
 
 mcp.load_module = function(namespace, callback,el,options) {
- 
+ 	
+ 	var el = el || document.body;
+ 	var options = options || null;
+ 	
 	// does the namespace even exists?
 	if(mcp.modules[namespace] !== undefined) { 
 	
@@ -162,7 +165,8 @@ mcp.load_module = function(namespace, callback,el,options) {
 					
 					// fire the callback
 					if(callback) callback();
-					// here is a change to the module
+				
+					// run the build
 					mcp.modules[namespace].run(el,options);
 							
 					// go over all the instances (- the one loaded) and render them
