@@ -162,6 +162,7 @@ mcp.load_module = function(namespace, callback,el,options) {
 					
 					// fire the callback
 					if(callback) callback();
+					// here is a change to the module
 					mcp.modules[namespace].run(el,options);
 							
 					// go over all the instances (- the one loaded) and render them
