@@ -1,3 +1,9 @@
+/*
+	Author: Thomas Brasington
+	What: A base namespace I use to hang off JS apps
+	Experimenting with a loading mechanism for inline content
+*/
+
 // Defines the base for our mcp
 var mcp = {};
 
@@ -15,7 +21,30 @@ mcp.error = function(message) {
 	
 }
 
-// An object to load modules in to
+/*
+	An object to load modules in to
+
+	structure 
+	 
+	 mcp.modules = {
+		"namespace" : [{
+				"loaded" : false,
+				"files" : [
+				{
+					"id" : "namespace js",
+					"file" : "apps/namespace/css/base.css",
+					"type" : "css"
+				},
+				{
+					"id" : "namespace CSS",
+					"file" : "apps/namespace/js/base.js",
+					"type" : "js"
+				}
+				]
+			}]
+		};
+*/
+
 mcp.modules = {};
 
 // what modules we are currently lading in 
