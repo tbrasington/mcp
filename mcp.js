@@ -5,7 +5,10 @@
 */
 
 // Defines the base for our mcp
-var mcp = {};
+var mcp = function() {
+
+
+var that = this;
 
 // error handling
 
@@ -14,7 +17,7 @@ var mcp = {};
 	@message - something went wrong
 	@date - when it hmcpened
 */
-mcp.error = function(message) {
+that.error = function(message) {
 	
 	console.log(" --- Error ---")
 	console.log(message)
@@ -26,7 +29,7 @@ mcp.error = function(message) {
 
 	structure 
 	 
-	 mcp.modules = {
+	 that.modules = {
 		"namespace" : [{
 				"loaded" : false,
 				"files" : [
@@ -45,17 +48,17 @@ mcp.error = function(message) {
 		};
 */
 
-mcp.modules = {};
+that.modules = {};
 
 // what modules we are currently lading in 
-mcp.loading = {};
+that.loading = {};
 
 /*
  	Basic js and css loader
  	@object files - an object of files to load
  	@function callback - if you wish to fire an event once loaded
 */
-mcp.loader = function( files, callback){
+that.loader = function( files, callback){
 	
 	var files_to_load = [], 
 	number_of_files = files.length, 
@@ -65,9 +68,9 @@ mcp.loader = function( files, callback){
 	// load each file in
 	files.forEach(function(item,index)  {
 		
-		mcp.loading
+		that.loading
 		// what kind of file is it?
-		var file_type = mcp.file_type(item.type);
+		var file_type = that.file_type(item.type);
 		
 		files_to_load[index] = document.createElement(file_type.element);
 		
@@ -100,7 +103,7 @@ mcp.loader = function( files, callback){
  	discerning what kind of file you need to load
  	@string type - js/css/??? 
 */
-mcp.file_type = function(type) {
+that.file_type = function(type) {
 	
 	var file_type =  {
 		string : "",
@@ -125,75 +128,66 @@ mcp.file_type = function(type) {
 
 
 /*
- 	Loads in modules for the mcp. or Not if they are already cached in the DOM
+ 	Loads in modules for the that. or Not if they are already cached in the DOM
  	@object files - an object of files to load
  	@function callback - if you wish to fire an event once loaded
 */
-mcp.script_queue = [];
+that.script_queue = [];
 
-mcp.load_module = function(namespace, callback,el,options) {
+that.load_module = function(namespace, callback,el,options) {
  	
  	var el = el || document.body;
  	var options = options || null;
  	
 	// does the namespace even exists?
-	if(mcp.modules[namespace] !== undefined) { 
+	if(that.modules[namespace] !== undefined) { 
 	
-		var module = mcp.modules[namespace][0];
+		var module = that.modules[namespace][0];
 		
 		// check file isnt in queue and isnt already loaded
-		if(mcp.script_queue[namespace] !== undefined && module.loaded === false) {
+		if(that.script_queue[namespace] !== undefined && module.loaded === false) {
 			
 			// load each one into our script queue
-			mcp.script_queue[namespace][_.size(mcp.script_queue[namespace])] = {
+			that.script_queue[namespace][_.size(that.script_queue[namespace])] = {
 				"el" : el,
 				"options" : options
 			};
 			
 		} else {
 			// module doesnt yet exist in the load queue so create it
-			mcp.script_queue[namespace] = {};
+			that.script_queue[namespace] = {};
 
 			// module isn't in cache yet, so load it in
 			if(module.loaded === false){
 				
 				// load the module in
-				mcp.loader(module.files, function(){
+				that.loader(module.files, function(){
 				
 					//the module is now loaded so don't do it again
 					module.loaded = true;
 					
 					// fire the callback
-					if(callback) callback();
-				
-					// run the build
-					mcp.modules[namespace].run(el,options);
-							
-					// go over all the instances (- the one loaded) and render them
-					for(var a=0; length = _.size(mcp.script_queue[namespace]), a<length; a++) {
-					
-						var instance_to_run = mcp.script_queue[namespace][a];
-						// use the module namesapce here and use the cached el and options of instance_to_run
-						mcp.modules[namespace].run(instance_to_run.el, instance_to_run.options);
-					} 
+					if(callback) callback(el,options);
+				 
 				});
 				
 			} else { 
 				
 				// the files are already loaded so fire any callback
-				if(callback) callback();
-					mcp.modules[namespace].run(el,options);
+				if(callback) callback(el,options);
 			}
 			
-			return mcp.modules[namespace];	
+			return that.modules[namespace];	
 		}
 		
 	} else {
 		// throw some sort of error
-		mcp.error({
+		that.error({
 			type : 1,
 			message : namespace + "  module doesn't exist",
 			date : new Date().getTime()
 		})
 	}
+};
+	return that;
 };
